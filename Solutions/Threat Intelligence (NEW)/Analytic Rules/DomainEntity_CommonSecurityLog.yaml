@@ -51,7 +51,13 @@ query: |
       | extend DomainName = tolower(IndicatorType)
       | where TimeGenerated >= ago(ioc_lookBack)
       | summarize LatestIndicatorTime = arg_max(TimeGenerated, *) by Id, ObservableValue
-      | where IsActive and (ValidUntil > now() or isempty(ValidUntil)));
+      | where IsActive and (ValidUntil > now() or isempty(ValidUntil)))
+      // Get Rid of Manually Revoked IOC
+      | join kind = leftouter (ThreatIntelIndicators
+      | where IndicatorType == "domain-name"
+      | where Revoked == true
+      | project RevokeTime = TimeGenerated,Id) on Id
+      | where TimeGenerated >= RevokeTime;
   // Join threat intelligence indicators with common security logs
   Domain_Indicators | join kind=innerunique (SecurityLog) on $left.DomainName == $right.Domain
   | where CommonSecurityLog_TimeGenerated < ValidUntil
@@ -72,5 +78,5 @@ entityMappings:
     fieldMappings:
       - identifier: Url
         columnName: PA_Url
-version: 1.4.3
+version: 1.4.4
 kind: Scheduled
