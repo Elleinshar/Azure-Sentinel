@@ -1,22 +1,21 @@
 id: d002c5f9-1e17-4688-bf36-7058699e5601
 name: VMware ESXi - Firewall disabled
 description: |
-  'Detects when root user login from uncommon IP address.'
+  'The ESXi host firewall has been disabled from an interactive ESXi shell via a built-in command line tool.'
 severity: Low
 status: Available
 requiredDataConnectors:
   - connectorId: SyslogAma
     datatypes:
       - Syslog
-queryFrequency: 1h
-queryPeriod: 14d
+queryFrequency: 10m
+queryPeriod: 10m
 triggerOperator: gt
 triggerThreshold: 0
 tactics:
-  - InitialAccess
-  - PrivilegeEscalation
+  - DefenseEvasion
 relevantTechniques:
-  - T1078
+  - T1562
 query: |
   TODEV
 entityMappings:
@@ -24,5 +23,5 @@ entityMappings:
     fieldMappings:
       - identifier: Address
         columnName: IPCustomEntity
-version: 1.0.3
+version: 1.0.0
 kind: Scheduled
