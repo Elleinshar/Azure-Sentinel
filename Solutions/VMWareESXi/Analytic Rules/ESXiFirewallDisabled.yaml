@@ -1,0 +1,28 @@
+id: d002c5f9-1e17-4688-bf36-7058699e5601
+name: VMware ESXi - Firewall disabled
+description: |
+  'Detects when root user login from uncommon IP address.'
+severity: Low
+status: Available
+requiredDataConnectors:
+  - connectorId: SyslogAma
+    datatypes:
+      - Syslog
+queryFrequency: 1h
+queryPeriod: 14d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+  - PrivilegeEscalation
+relevantTechniques:
+  - T1078
+query: |
+  TODEV
+entityMappings:
+  - entityType: IP
+    fieldMappings:
+      - identifier: Address
+        columnName: IPCustomEntity
+version: 1.0.3
+kind: Scheduled
